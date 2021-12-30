@@ -13,11 +13,21 @@ class Solver
 
   def dfs(x, y)
     @visited[x][y] = true
-    @dxdy.each do |dx, dy|
-      nx, ny = x + dx, y + dy
-      if nx >= 0 && nx < @h && ny >= 0 && ny < @w && @c[nx][ny] != "#" && !@visited[nx][ny]
-        dfs(nx, ny)
-      end
+    # 0, -1
+    if x >= 0 && x < @h && y - 1 >= 0 && y - 1 < @w && @c[x][y - 1] != "#" && !@visited[x][y - 1]
+      dfs(x, y - 1)
+    end
+    # 1, 0
+    if x + 1 >= 0 && x + 1 < @h && y >= 0 && y < @w && @c[x + 1][y] != "#" && !@visited[x + 1][y]
+      dfs(x + 1, y)
+    end
+    # 0, 1
+    if x >= 0 && x < @h && y + 1 >= 0 && y + 1 < @w && @c[x][y + 1] != "#" && !@visited[x][y + 1]
+      dfs(x, y + 1)
+    end
+    # -1, 0
+    if x - 1 >= 0 && x - 1 < @h && y >= 0 && y < @w && @c[x - 1][y] != "#" && !@visited[x - 1][y]
+      dfs(x - 1, y)
     end
   end
 end
