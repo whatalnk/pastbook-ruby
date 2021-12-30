@@ -1,22 +1,50 @@
-h, w = gets.chomp.split(" ").map(&:to_i)
-c = []
-s = []
-g = []
+ENV[Z = "RUBY_THREAD_VM_STACK_SIZE"] || exec({ Z => "100000000" }, "ruby", $0)
 
-h.times do |i|
-  r = gets.chomp.split(" ").map(&:to_i)
-  w.times do |j|
-    if r[j] == "s"
-      s = [i, j]
-    end
-    if r[j] == "g"
-      g = [i, j]
+class Solver
+  attr_reader :visited
+
+  def initialize(h, w, c)
+    @h = h
+    @w = w
+    @c = c
+    @visited = Array.new(h) { Array.new(w, false) }
+    @dxdy = [[0, -1], [1, 0], [0, 1], [-1, 0]]
+  end
+
+  def dfs(x, y)
+    @visited[x][y] = true
+    @dxdy.each do |dx, dy|
+      nx, ny = x + dx, y + dy
+      if nx >= 0 && nx < @h && ny >= 0 && ny < @w && @c[nx][ny] != "#" && !@visited[nx][ny]
+        dfs(nx, ny)
+      end
     end
   end
-  c << r
 end
-visited = Array.new(h) { Array.new(w, false) }
-dxdy = [[0, -1], [1, 0], [0, 1], [-1, 0]]
 
-def dfs(x, y)
+if __FILE__ == $0
+  h, w = gets.chomp.split(" ").map(&:to_i)
+  c = []
+  s = []
+  g = []
+
+  h.times do |i|
+    r = gets.chomp.chars
+    w.times do |j|
+      if r[j] == "s"
+        s = [i, j]
+      end
+      if r[j] == "g"
+        g = [i, j]
+      end
+    end
+    c << r
+  end
+  solver = Solver.new(h, w, c)
+  solver.dfs(s[0], s[1])
+  if solver.visited[g[0]][g[1]]
+    puts "Yes"
+  else
+    puts "No"
+  end
 end
