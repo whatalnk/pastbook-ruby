@@ -1,13 +1,15 @@
 # ref: open data structure 10.1 BinaryHeap
+tuple = Struct.new(:d, :i)
+
 class BinaryHeap
   attr_accessor :n, :a
-  def initialize
+  def initialize(a_size)
     @n = 0
-    @a = Array.new
+    @a = Array.new(a_size)
   end
 
   def compare(x, y)
-    return x[0] - y[0]
+    return x.d - y.d
   end
 
   def left(i)
@@ -23,9 +25,6 @@ class BinaryHeap
   end
 
   def add(x)
-    if @n + 1 > @a.size
-      resize
-    end
 
     @a[@n] = x
     @n += 1
@@ -48,10 +47,6 @@ class BinaryHeap
     @a[0] = @a[@n - 1]
     @n -= 1
     trickle_down(0)
-
-    if (3 * n < @a.size)
-      resize
-    end
 
     return x
   end
@@ -85,18 +80,14 @@ class BinaryHeap
       break if i < 0
     end
   end
-
-  def resize
-    new_size = [2 * @n, 1].max
-    b = Array.new(new_size - @n)
-    @a += b
-  end
 end
 
 # Dijkstra
 N, M = gets.chomp.split(" ").map(&:to_i)
 
 g = Array.new(N) { Array.new }
+
+M_MAX = 10 ** 6
 
 M.times do
   a, b = gets.chomp.split(" ").map(&:to_i)
@@ -107,20 +98,18 @@ M.times do
 end
 
 dist = Array.new(N, -1)
-q = BinaryHeap.new
-q.add([0, 0])
+q = BinaryHeap.new(a_size = M_MAX)
+q.add(tuple.new(0, 0))
 
 dist[0] = 0
 
 while q.n > 0
-  d, i = q.remove
+  di = q.remove
 
-  g[i].each do |j|
-    x = 1
-
-    if dist[j] == -1 || dist[j] > dist[i] + x
-      dist[j] = dist[i] + x
-      q.add([dist[j], j])
+  g[di.i].each do |j|
+    if dist[j] == -1 || dist[j] > dist[di.i] + 1
+      dist[j] = dist[di.i] + 1
+      q.add(tuple.new(dist[j], j))
     end
   end
 end
