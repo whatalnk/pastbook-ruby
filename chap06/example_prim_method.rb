@@ -44,6 +44,15 @@ class MeldableHeap
   end
 end
 
+N, M = gets.chomp.split(" ").map(&:to_i)
+g = Array.new(N) { Array.new }
+
+M.times do
+  u, v, c = gets.chomp.split(" ").map(&:to_i)
+  g[u] << [v, c]
+  g[v] << [u, c]
+end
+
 marked = Array.new(N, false)
 
 marked_count = 0
@@ -61,12 +70,14 @@ end
 sum = 0
 
 while marked_count < N
-  ci = q.remove
-  next if marked(ci.i)
-  marked[ci.i] = true
+  cj = q.remove
+  next if marked[cj.j]
+  marked[cj.j] = true
   marked_count += 1
 
-  g[ci.i].each do |j, c|
+  sum += cj.c
+
+  g[cj.j].each do |j, c|
     next if marked[j]
     q.add(Tuple.new(c, j))
   end
