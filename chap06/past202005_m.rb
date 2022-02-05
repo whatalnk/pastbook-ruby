@@ -54,6 +54,8 @@ end
 
 ALL.times do |n|
   K.times do |i|
+    next if cost[n][i] == INF
+
     K.times do |j|
       if has_bit(n, j) || i == j
         next
