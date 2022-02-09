@@ -1,11 +1,9 @@
 N = gets.chomp.to_i
 S = " " + gets.chomp
-c = gets.chomp.split(" ").map(&:to_i)
-c.unshift(0)
-d = gets.chomp.split(" ").map(&:to_i)
-d.unshift(0)
+c = [0] + gets.chomp.split(" ").map(&:to_i)
+d = [0] + gets.chomp.split(" ").map(&:to_i)
 
-INF = 10 ** 100
+INF = 10 ** 20
 
 cost = Array.new(N + 1) { Array.new(N + 1, INF) }
 cost[0][0] = 0
